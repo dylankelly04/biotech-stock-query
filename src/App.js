@@ -18,6 +18,7 @@ function formatDate(dateObj) {
 }
 
 function App() {
+  const [selectValue, setSelectedValue] = useState(null);
   const [chartData, setChartData] = useState([
     { date: "Jan 22", SemiAnalysis: 2890 },
     { date: "Feb 22", SemiAnalysis: 2756 },
@@ -35,8 +36,8 @@ function App() {
   console.log(chartData);
 
   const [inputValue, setInputValue] = useState({
-    ticker: "$HACK",
-    query: "Why?",
+    ticker: "",
+    query: "",
   });
   const [selectedItem, setSelectedItem] = useState("1mo");
   const handleChange = (e) => {
@@ -50,6 +51,7 @@ function App() {
   const handleMenuItemClick = (e) => {
     e.preventDefault(); // Prevent the default anchor action
     setSelectedItem(e.currentTarget.textContent);
+    setSelectedValue(e.currentTarget.textContent);
     console.log(selectedItem);
   };
 
@@ -126,7 +128,7 @@ function App() {
               <div class="w-1/2">
                 <label
                   for="password"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  class="block mb-2 text-sm font-medium  text-white"
                 >
                   Query
                 </label>
@@ -152,20 +154,18 @@ function App() {
                   required
                 />
               </div> */}
-              <label
-                for="terms"
-                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-500"
-              >
+              <label for="terms" class="ms-2 text-sm font-medium text-gray-500">
                 This is not financial advice and may contain mistakes.
               </label>
             </div>
             <button
               id="dropdownDefaultButton"
               data-dropdown-toggle="dropdown"
-              class="bg-gray-700 border-gray-600 placeholder-gray-400 text-white  focus:border-gray-900 hover:bg-slate-600 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              class="mr-5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white  focus:border-gray-900 hover:bg-slate-600 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               type="button"
             >
-              Select Time Period{" "}
+              {selectValue ? selectValue : "Select Time Period"}
+              {/* Select Time Period{" "} */}
               <svg
                 class="w-2.5 h-2.5 ms-3"
                 aria-hidden="true"
@@ -292,10 +292,17 @@ function App() {
           </div> */}
         </div>
         <div className="border rounded-md border-sky-400">
-          <h3 className="text-slate-200">Compare Similar Stocks</h3>
+          <h3 className="text-slate-200 text-center">Compare Similar Stocks</h3>
         </div>
         <div className="border rounded-md border-emerald-600">
-          Stock Analysis
+          <h3 className="text-slate-200 text-center">Stock Analysis</h3>
+          <div className="border rounded-md border-slate-800 bg-yellow-700">
+            AI Stock Rating:
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>1</div>
+            <div>2</div>
+          </div>
         </div>
       </div>
     </div>
