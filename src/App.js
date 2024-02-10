@@ -1,6 +1,6 @@
 import logo from "./logo.svg";
 import { LineChart } from "@tremor/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import "flowbite";
 
@@ -18,22 +18,21 @@ function formatDate(dateObj) {
 }
 
 function App() {
-  const [selectValue, setSelectedValue] = useState(null);
+  const [stockName, setStockName] = useState("HACK");
   const [chartData, setChartData] = useState([
-    { date: "Jan 22", SemiAnalysis: 2890 },
-    { date: "Feb 22", SemiAnalysis: 2756 },
-    { date: "Mar 22", SemiAnalysis: 3322 },
-    { date: "Apr 22", SemiAnalysis: 3470 },
-    { date: "May 22", SemiAnalysis: 3475 },
-    { date: "Jun 22", SemiAnalysis: 3129 },
-    { date: "Jul 22", SemiAnalysis: 3490 },
-    { date: "Aug 22", SemiAnalysis: 2903 },
-    { date: "Sep 22", SemiAnalysis: 2643 },
-    { date: "Oct 22", SemiAnalysis: 2837 },
-    { date: "Nov 22", SemiAnalysis: 2954 },
-    { date: "Dec 22", SemiAnalysis: 3239 },
+    { date: "Jan 22", [stockName]: 2890 },
+    { date: "Feb 22", [stockName]: 2756 },
+    { date: "Mar 22", [stockName]: 3322 },
+    { date: "Apr 22", [stockName]: 3470 },
+    { date: "May 22", [stockName]: 3475 },
+    { date: "Jun 22", [stockName]: 3129 },
+    { date: "Jul 22", [stockName]: 3490 },
+    { date: "Aug 22", [stockName]: 2903 },
+    { date: "Sep 22", [stockName]: 2643 },
+    { date: "Oct 22", [stockName]: 2837 },
+    { date: "Nov 22", [stockName]: 2954 },
+    { date: "Dec 22", [stockName]: 3239 },
   ]);
-  console.log(chartData);
 
   const [inputValue, setInputValue] = useState({
     ticker: "ORGO",
@@ -53,43 +52,45 @@ function App() {
   const handleMenuItemClick = (e) => {
     e.preventDefault(); // Prevent the default anchor action
     setSelectedItem(e.currentTarget.textContent);
-    setSelectedValue(e.currentTarget.textContent);
-    console.log(selectedItem);
   };
 
-  async function fetchGPTResponse(e) {
+  function fetchData(e) {
     e.preventDefault();
-    console.log("fetch gpt " + JSON.stringify(inputValue));
-    var req = await axios.get(
-      `https://biotech-stock-query-backend.onrender.com/api/${inputValue.ticker}?query=${inputValue.query}`
-    );
-    var data = req.data;
-    console.log(data);
-    setGptResponse(data.messages);
+    setStockName(inputValue.ticker);
   }
-
-  async function fetchData(e) {
-    e.preventDefault();
-    fetchGPTResponse(e);
-    var req = await axios.get(
-      `https://biotech-stock-query-backend.onrender.com/data?ticker=${inputValue.ticker}&time=${selectedItem}`
-    );
-    var data = req.data;
-    data = JSON.parse(data);
-    console.log(data);
-    var close = data.Close;
-
-    var newChart = [];
-    // console.log(close);
-    for (const [key, value] of Object.entries(close)) {
-      var formattedDate = new Date(parseInt(key));
-
-      newChart.push({ date: formatDate(formattedDate), SemiAnalysis: value });
-    }
-    setChartData(newChart);
-
-    console.log(newChart);
-  }
+  
+  useEffect(() => {
+    const fetchDataAsync = async () => {
+      if (!stockName) return;
+      
+      console.log(stockName);
+      
+      try {
+        var response = await axios.get(
+          `https://biotech-stock-query-backend.onrender.com/data?ticker=${stockName}&time=${selectedItem}`
+        );
+        
+        var data = response.data;
+        data = JSON.parse(data);
+        var close = data.Close;
+        console.log(close);
+        var newChart = [];
+        
+        for (const [key, value] of Object.entries(close)) {
+          var formattedDate = new Date(parseInt(key));
+          newChart.push({ date: formatDate(formattedDate), [stockName]: value });
+        }
+        
+        setChartData(newChart);
+        
+      } catch (error) {
+        console.error("There was an error fetching the data: ", error);
+      }
+    };
+  
+    fetchDataAsync();
+  }, [stockName]); // Effect runs only when stockName changes
+  
   return (
     <div>
       <div className="grid grid-cols-3 gap-4 mt-6 ml-6">
@@ -102,7 +103,7 @@ function App() {
             data={chartData}
             index="date"
             yAxisWidth={65}
-            categories={["SemiAnalysis"]}
+            categories={[stockName]}
             colors={["indigo", "cyan"]}
             // valueFormatter={valueFormatter}
           />
