@@ -68,7 +68,7 @@ function App() {
   async function fetchSimilarStocks(e) {
     console.log("fetch similar stocks " + JSON.stringify(inputValue));
     var req = await axios.get(
-      `http://localhost:8000/api/similar/${inputValue.ticker}`
+      `https://biotech-stock-query-backend.onrender.com/api/similar/${inputValue.ticker}`
     );
     var data = req.data;
     console.log(data);
