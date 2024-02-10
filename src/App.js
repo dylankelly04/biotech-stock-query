@@ -64,7 +64,7 @@ function App() {
     var close = data.Close;
 
     var newChart = [];
-    console.log(close);
+    // console.log(close);
     for (const [key, value] of Object.entries(close)) {
       var formattedDate = new Date(parseInt(key));
 
@@ -224,7 +224,7 @@ function App() {
                     onClick={handleMenuItemClick}
                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                   >
-                    1yr
+                    1y
                   </a>
                 </li>
               </ul>
