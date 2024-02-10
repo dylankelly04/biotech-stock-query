@@ -18,6 +18,7 @@ function formatDate(dateObj) {
 }
 
 function App() {
+  const [selectValue, setSelectedValue] = useState(null);
   const [chartData, setChartData] = useState([
     { date: "Jan 22", SemiAnalysis: 2890 },
     { date: "Feb 22", SemiAnalysis: 2756 },
@@ -52,6 +53,7 @@ function App() {
   const handleMenuItemClick = (e) => {
     e.preventDefault(); // Prevent the default anchor action
     setSelectedItem(e.currentTarget.textContent);
+    setSelectedValue(e.currentTarget.textContent);
     console.log(selectedItem);
   };
 
@@ -138,7 +140,7 @@ function App() {
               <div class="w-1/2">
                 <label
                   for="password"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  class="block mb-2 text-sm font-medium text-white">
                   Query
                 </label>
                 <input
@@ -153,26 +155,14 @@ function App() {
                 />
               </div>
             </div>
-            <div class="flex items-start mb-2">
-              {/* <div class="flex items-center h-5">
-                <input
-                  id="terms"
-                  type="checkbox"
-                  value=""
-                  class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-                  required
-                />
-              </div> */}
-              <label
-                for="terms"
-                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-500">
-                This is not financial advice and may contain mistakes.
-              </label>
-            </div>
+
+            <label class="block mb-2 text-sm font-medium text-white">
+              Timeframe
+            </label>
             <button
               id="dropdownDefaultButton"
               data-dropdown-toggle="dropdown"
-              class="bg-gray-700 border-gray-600 placeholder-gray-400 text-white  focus:border-gray-900 hover:bg-slate-600 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              class="mr-5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white  focus:border-gray-900 hover:bg-slate-600 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               type="button">
               {selectedItem}
               <svg
@@ -253,6 +243,13 @@ function App() {
                 </svg>
               </div>
             </button>
+            <div>
+              <label
+                for="terms"
+                class="text-sm font-medium text-gray-900 dark:text-gray-500">
+                This is not financial advice and may contain mistakes.
+              </label>
+            </div>
           </form>
           <div class="h-[600px] overflow-y-auto bg-gray-200 row-span-2 mt-5 p-4">
             {gptResponse.map((message) => {
@@ -267,10 +264,17 @@ function App() {
           </div>
         </div>
         <div className="border rounded-md border-sky-400">
-          <h3 className="text-slate-200">Compare Similar Stocks</h3>
+          <h3 className="text-slate-200 text-center">Compare Similar Stocks</h3>
         </div>
         <div className="border rounded-md border-emerald-600">
-          Stock Analysis
+          <h3 className="text-slate-200 text-center">Stock Analysis</h3>
+          <div className="border rounded-md border-slate-800 bg-yellow-700">
+            AI Stock Rating:
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>1</div>
+            <div>2</div>
+          </div>
         </div>
       </div>
     </div>
