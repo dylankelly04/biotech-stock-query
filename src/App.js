@@ -35,10 +35,12 @@ function App() {
   console.log(chartData);
 
   const [inputValue, setInputValue] = useState({
-    ticker: "HACK",
-    query: "Why?",
+    ticker: "ORGO",
+    query: "Why is the stock going up?",
   });
   const [selectedItem, setSelectedItem] = useState("1mo");
+  const [gptResponse, setGptResponse] = useState(["GPT Response Here"]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInputValue({
@@ -52,6 +54,17 @@ function App() {
     setSelectedItem(e.currentTarget.textContent);
     console.log(selectedItem);
   };
+
+  async function fetchGPTResponse(e) {
+    e.preventDefault();
+    console.log("fetch gpt " + JSON.stringify(inputValue));
+    var req = await axios.get(
+      `https://biotech-stock-query-backend.onrender.com/api/${inputValue.ticker}?query=${inputValue.query}`
+    );
+    var data = req.data;
+    console.log(data);
+    setGptResponse(data.messages);
+  }
 
   async function fetchData(e) {
     e.preventDefault();
@@ -117,7 +130,7 @@ function App() {
                   name="ticker"
                   class="shadow-sm w-[72px] border text-sm rounded-lg block p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm-light"
                   required
-                  placeholder="HACK"
+                  placeholder="AAPL"
                   value={inputValue.ticker}
                   onChange={handleChange}
                 />
@@ -220,7 +233,8 @@ function App() {
             </div>
             <button
               type="submit"
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              onClick={fetchGPTResponse}>
               <div class="flex">
                 Submit Query{" "}
                 <svg
@@ -240,43 +254,17 @@ function App() {
               </div>
             </button>
           </form>
-          {/* <div class="h-[600px] overflow-y-auto bg-gray-200 row-span-2">
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum." "Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat. Duis aute irure dolor in reprehenderit in
-            voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-            officia deserunt mollit anim id est laborum." "Lorem ipsum dolor sit
-            amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-            ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-            nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum." "Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum." "Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum."
-          </div> */}
+          <div class="h-[600px] overflow-y-auto bg-gray-200 row-span-2 mt-5 p-4">
+            {gptResponse.map((message) => {
+              return (
+                <div class="mb-4">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">
+                    {message}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
         <div className="border rounded-md border-sky-400">
           <h3 className="text-slate-200">Compare Similar Stocks</h3>
