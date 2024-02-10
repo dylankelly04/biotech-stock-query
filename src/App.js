@@ -41,6 +41,7 @@ function App() {
   });
   const [selectedItem, setSelectedItem] = useState("1mo");
   const [gptResponse, setGptResponse] = useState(["GPT Response Here"]);
+  const [similarStocks, setSimilarStocks] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -58,7 +59,6 @@ function App() {
   };
 
   async function fetchGPTResponse(e) {
-    e.preventDefault();
     console.log("fetch gpt " + JSON.stringify(inputValue));
     var req = await axios.get(
       `https://biotech-stock-query-backend.onrender.com/api/${inputValue.ticker}?query=${inputValue.query}`
@@ -68,9 +68,20 @@ function App() {
     setGptResponse(data.messages);
   }
 
+  async function fetchSimilarStocks(e) {
+    console.log("fetch similar stocks " + JSON.stringify(inputValue));
+    var req = await axios.get(
+      `http://localhost:8000/api/similar/${inputValue.ticker}`
+    );
+    var data = req.data;
+    console.log(data);
+    setSimilarStocks(data.similar);
+  }
+
   async function fetchData(e) {
     e.preventDefault();
     fetchGPTResponse(e);
+    fetchSimilarStocks(e);
     var req = await axios.get(
       `https://biotech-stock-query-backend.onrender.com/data?ticker=${inputValue.ticker}&time=${selectedItem}`
     );
@@ -265,6 +276,17 @@ function App() {
         </div>
         <div className="border rounded-md border-sky-400">
           <h3 className="text-slate-200 text-center">Compare Similar Stocks</h3>
+          <div className="text-slate-200 flex flex-row">
+            {similarStocks.map((stock) => {
+              return (
+                <a
+                  href={`https://finance.yahoo.com/quote/${stock}`}
+                  className="inline-block px-1">
+                  {stock}
+                </a>
+              );
+            })}
+          </div>
         </div>
         <div className="border rounded-md border-emerald-600">
           <h3 className="text-slate-200 text-center">Stock Analysis</h3>
