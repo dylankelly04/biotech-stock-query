@@ -18,6 +18,7 @@ function formatDate(dateObj) {
 }
 
 function App() {
+  const [stockName, setStockName] = useState("HACK");
   const [chartData, setChartData] = useState([
     { date: "Jan 22", SemiAnalysis: 2890 },
     { date: "Feb 22", SemiAnalysis: 2756 },
@@ -35,8 +36,8 @@ function App() {
   console.log(chartData);
 
   const [inputValue, setInputValue] = useState({
-    ticker: "$HACK",
-    query: "Why?",
+    ticker: "",
+    query: "",
   });
   const [selectedItem, setSelectedItem] = useState("1mo");
   const handleChange = (e) => {
@@ -70,8 +71,8 @@ function App() {
 
       newChart.push({ date: formatDate(formattedDate), SemiAnalysis: value });
     }
+    setStockName(inputValue.ticker);
     setChartData(newChart);
-
     console.log(newChart);
   }
   return (
@@ -86,7 +87,7 @@ function App() {
             data={chartData}
             index="date"
             yAxisWidth={65}
-            categories={["SemiAnalysis"]}
+            categories={[stockName]}
             colors={["indigo", "cyan"]}
             // valueFormatter={valueFormatter}
           />
