@@ -29,7 +29,7 @@ function App() {
   return (
     <div>
       <div className="grid grid-cols-3 gap-4 mt-6 ml-6">
-        <div className="col-span-2">
+        <div className="col-span-2 border border-slate-100 rounded-md bg-[#403e3e] ">
           <h3 className="text-lg font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
             Newsletter revenue over time (USD)
           </h3>{" "}
@@ -44,7 +44,7 @@ function App() {
           />
         </div>
         <div>
-          <h1 className="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl mt-1 mr-2">
+          <h1 className="mb-4 text-3xl font-extrabold text-white md:text-5xl lg:text-6xl mt-1 mr-2">
             We're Bringing{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
               Transparency
@@ -60,14 +60,14 @@ function App() {
               <div class="mr-4">
                 <label
                   for="email"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  class="block mb-2 text-sm font-medium text-white"
                 >
                   Ticker
                 </label>
                 <input
                   type="text"
                   id="email"
-                  class="shadow-sm w-[72px] bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                  class="shadow-sm w-[72px] border text-sm rounded-lg block p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm-light"
                   placeholder="$HACK"
                   required
                 />
@@ -82,7 +82,8 @@ function App() {
                 <input
                   type="text"
                   id="password"
-                  class="shadow-sm w-[425px] bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                  class="shadow-sm w-[425px] bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                  placeholder="Why did $HACK stock go up 30% this month?"
                   required
                 />
               </div>
@@ -128,7 +129,7 @@ function App() {
               </div>
             </button>
           </form>
-          <div class="h-[600px] overflow-y-auto bg-gray-200 row-span-2">
+          {/* <div class="h-[600px] overflow-y-auto bg-gray-200 row-span-2">
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -164,10 +165,14 @@ function App() {
             esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
             cupidatat non proident, sunt in culpa qui officia deserunt mollit
             anim id est laborum."
-          </div>
+          </div> */}
         </div>
-        <div>3</div>
-        <div>4</div>
+        <div className="border rounded-md border-sky-400">
+          <h3 className="text-slate-200">Compare Similar Stocks</h3>
+        </div>
+        <div className="border rounded-md border-emerald-600">
+          Stock Analysis
+        </div>
       </div>
     </div>
   );
