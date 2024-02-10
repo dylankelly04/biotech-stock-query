@@ -1,31 +1,78 @@
 import logo from "./logo.svg";
 import { LineChart } from "@tremor/react";
 import { useState } from "react";
+import axios from 'axios';
+import 'flowbite';
 
-const chartdata = [
-  { date: "Jan 22", SemiAnalysis: 2890, "The Pragmatic Engineer": 2338 },
-  { date: "Feb 22", SemiAnalysis: 2756, "The Pragmatic Engineer": 2103 },
-  { date: "Mar 22", SemiAnalysis: 3322, "The Pragmatic Engineer": 2194 },
-  { date: "Apr 22", SemiAnalysis: 3470, "The Pragmatic Engineer": 2108 },
-  { date: "May 22", SemiAnalysis: 3475, "The Pragmatic Engineer": 1812 },
-  { date: "Jun 22", SemiAnalysis: 3129, "The Pragmatic Engineer": 1726 },
-  { date: "Jul 22", SemiAnalysis: 3490, "The Pragmatic Engineer": 1982 },
-  { date: "Aug 22", SemiAnalysis: 2903, "The Pragmatic Engineer": 2012 },
-  { date: "Sep 22", SemiAnalysis: 2643, "The Pragmatic Engineer": 2342 },
-  { date: "Oct 22", SemiAnalysis: 2837, "The Pragmatic Engineer": 2473 },
-  { date: "Nov 22", SemiAnalysis: 2954, "The Pragmatic Engineer": 3848 },
-  { date: "Dec 22", SemiAnalysis: 3239, "The Pragmatic Engineer": 3736 },
-];
 const valueFormatter = function (number) {
   return "$ " + new Intl.NumberFormat("us").format(number).toString();
 };
 
-function App() {
-  const [inputValue, setInputValue] = useState("");
+function formatDate(dateObj) {
+  // Extract the month and day, and ensure they are in two-digit format
+  var month = ('0' + (dateObj.getMonth() + 1)).slice(-2); // Months are 0-indexed
+  var day = ('0' + dateObj.getDate()).slice(-2); // Pad single-digit days with a leading zero
 
-  const handleChange = (event) => {
-    setInputValue(event.target.value);
+  // Combine the month and day in MM-DD format
+  return month + '-' + day;
+}
+
+
+
+function App() {
+  const [chartData, setChartData] = useState([
+    { date: "Jan 22", SemiAnalysis: 2890 },
+    { date: "Feb 22", SemiAnalysis: 2756},
+    { date: "Mar 22", SemiAnalysis: 3322},
+    { date: "Apr 22", SemiAnalysis: 3470},
+    { date: "May 22", SemiAnalysis: 3475},
+    { date: "Jun 22", SemiAnalysis: 3129},
+    { date: "Jul 22", SemiAnalysis: 3490},
+    { date: "Aug 22", SemiAnalysis: 2903},
+    { date: "Sep 22", SemiAnalysis: 2643},
+    { date: "Oct 22", SemiAnalysis: 2837},
+    { date: "Nov 22", SemiAnalysis: 2954},
+    { date: "Dec 22", SemiAnalysis: 3239},
+  ]);
+  console.log(chartData);
+
+  const [inputValue, setInputValue] = useState({ticker: '$HACK', query: 'Why?'});
+  const [selectedItem, setSelectedItem] = useState('1mo');
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInputValue({
+      ...inputValue,
+      [name]: value,
+    });
   };
+
+  const handleMenuItemClick = (e) => {
+    e.preventDefault(); // Prevent the default anchor action
+    setSelectedItem(e.currentTarget.textContent);
+    console.log(selectedItem);
+  };
+
+  async function fetchData(e)
+{
+    e.preventDefault();
+    var req = await axios.get(`http://127.0.0.1:8000/data?ticker=${inputValue.ticker}&time=${selectedItem}`);
+    var data = req.data;
+    data = JSON.parse(data);
+    console.log(data);
+    var close = data.Close;
+
+    var newChart = [];
+    console.log(close);
+    for (const [key, value] of Object.entries(close)) {
+
+      var formattedDate = new Date(parseInt(key));
+      
+      newChart.push({date: formatDate(formattedDate), SemiAnalysis: value});
+    }
+    setChartData(newChart);
+
+    console.log(newChart);
+}
   return (
     <div>
       {/* <header class="flex justify-right items-center mt-10">
@@ -59,12 +106,12 @@ function App() {
           </h3>{" "}
           <LineChart
             className="mt-4 h-[650px]"
-            data={chartdata}
+            data={chartData}
             index="date"
             yAxisWidth={65}
-            categories={["SemiAnalysis", "The Pragmatic Engineer"]}
+            categories={["SemiAnalysis"]}
             colors={["indigo", "cyan"]}
-            valueFormatter={valueFormatter}
+            // valueFormatter={valueFormatter}
           />
         </div>
         <div>
@@ -79,7 +126,7 @@ function App() {
             </span>{" "}
           </h1>
           {/* <form class="max-w-sm mx-auto"> */}
-          <form class="max-w-sm">
+          <form class="max-w-sm" onSubmit={fetchData}>
             <div class="mb-2 flex left-0">
               <div class="mr-4">
                 <label
@@ -91,9 +138,11 @@ function App() {
                 <input
                   type="text"
                   id="email"
+                  name = "ticker"
                   class="shadow-sm w-[72px] bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                  placeholder="$HACK"
                   required
+                  value = {inputValue.ticker}
+                  onChange = {handleChange}
                 />
               </div>
               <div class="w-1/2">
@@ -106,10 +155,37 @@ function App() {
                 <input
                   type="text"
                   id="password"
+                  name="query"
                   class="shadow-sm w-[425px] bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                   required
+                  value = {inputValue.query}
+                  onChange = {handleChange}
                 />
               </div>
+
+              
+<button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">Period <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+</svg>
+</button>
+
+<div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+      <li>
+        <a href="#" onClick = {handleMenuItemClick} class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">1mo</a>
+      </li>
+      <li>
+        <a href="#" onClick = {handleMenuItemClick} class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">3mo</a>
+      </li>
+      <li>
+        <a href="#" onClick = {handleMenuItemClick} class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">6mo</a>
+      </li>
+      <li>
+        <a href="#" onClick = {handleMenuItemClick} class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">1yr</a>
+      </li>
+    </ul>
+</div>
+
             </div>
             <div class="flex items-start mb-2">
               {/* <div class="flex items-center h-5">
@@ -159,5 +235,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;
