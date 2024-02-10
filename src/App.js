@@ -111,7 +111,7 @@ function App() {
                 />
               </div>
             </div>
-            <div class="flex items-start mb-5">
+            <div class="flex items-start mb-2">
               {/* <div class="flex items-center h-5">
                 <input
                   id="terms"
@@ -132,7 +132,24 @@ function App() {
               type="submit"
               class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
-              Register new account
+              <div class="flex">
+                Submit Query{" "}
+                <svg
+                  class="w-5 h-5 text-gray-800 dark:text-white"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m9 5 7 7-7 7"
+                  />
+                </svg>
+              </div>
             </button>
           </form>
         </div>
