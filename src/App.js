@@ -120,7 +120,7 @@ function App() {
                   name="ticker"
                   class="shadow-sm w-[72px] border text-sm rounded-lg block p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm-light"
                   required
-                  placeholder="$HACK"
+                  placeholder="HACK"
                   value={inputValue.ticker}
                   onChange={handleChange}
                 />
@@ -128,7 +128,7 @@ function App() {
               <div class="w-1/2">
                 <label
                   for="password"
-                  class="block mb-2 text-sm font-medium  text-white"
+                  class="block mb-2 text-sm font-medium text-white"
                 >
                   Query
                 </label>
@@ -137,7 +137,7 @@ function App() {
                   id="password"
                   name="query"
                   class="shadow-sm w-[425px]  border text-sm rounded-lg block p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm-light"
-                  placeholder="Why did $HACK stock go up 30% this month?"
+                  placeholder="Why?"
                   required
                   value={inputValue.query}
                   onChange={handleChange}
@@ -154,18 +154,20 @@ function App() {
                   required
                 />
               </div> */}
-              <label for="terms" class="ms-2 text-sm font-medium text-gray-500">
+              <label
+                for="terms"
+                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-500"
+              >
                 This is not financial advice and may contain mistakes.
               </label>
             </div>
             <button
               id="dropdownDefaultButton"
               data-dropdown-toggle="dropdown"
-              class="mr-5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white  focus:border-gray-900 hover:bg-slate-600 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              class="bg-gray-700 border-gray-600 placeholder-gray-400 text-white  focus:border-gray-900 hover:bg-slate-600 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               type="button"
             >
-              {selectValue ? selectValue : "Select Time Period"}
-              {/* Select Time Period{" "} */}
+              {selectedItem}
               <svg
                 class="w-2.5 h-2.5 ms-3"
                 aria-hidden="true"
