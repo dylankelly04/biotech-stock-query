@@ -35,7 +35,7 @@ function App() {
   console.log(chartData);
 
   const [inputValue, setInputValue] = useState({
-    ticker: "$HACK",
+    ticker: "HACK",
     query: "Why?",
   });
   const [selectedItem, setSelectedItem] = useState("1mo");
@@ -108,8 +108,7 @@ function App() {
               <div class="mr-4">
                 <label
                   for="email"
-                  class="block mb-2 text-sm font-medium text-white"
-                >
+                  class="block mb-2 text-sm font-medium text-white">
                   Ticker
                 </label>
                 <input
@@ -118,7 +117,7 @@ function App() {
                   name="ticker"
                   class="shadow-sm w-[72px] border text-sm rounded-lg block p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm-light"
                   required
-                  placeholder="$HACK"
+                  placeholder="HACK"
                   value={inputValue.ticker}
                   onChange={handleChange}
                 />
@@ -126,8 +125,7 @@ function App() {
               <div class="w-1/2">
                 <label
                   for="password"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   Query
                 </label>
                 <input
@@ -135,7 +133,7 @@ function App() {
                   id="password"
                   name="query"
                   class="shadow-sm w-[425px]  border text-sm rounded-lg block p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm-light"
-                  placeholder="Why did $HACK stock go up 30% this month?"
+                  placeholder="Why?"
                   required
                   value={inputValue.query}
                   onChange={handleChange}
@@ -154,8 +152,7 @@ function App() {
               </div> */}
               <label
                 for="terms"
-                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-500"
-              >
+                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-500">
                 This is not financial advice and may contain mistakes.
               </label>
             </div>
@@ -163,16 +160,14 @@ function App() {
               id="dropdownDefaultButton"
               data-dropdown-toggle="dropdown"
               class="bg-gray-700 border-gray-600 placeholder-gray-400 text-white  focus:border-gray-900 hover:bg-slate-600 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              type="button"
-            >
-              Select Time Period{" "}
+              type="button">
+              {selectedItem}
               <svg
                 class="w-2.5 h-2.5 ms-3"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                viewBox="0 0 10 6"
-              >
+                viewBox="0 0 10 6">
                 <path
                   stroke="currentColor"
                   stroke-linecap="round"
@@ -185,18 +180,15 @@ function App() {
 
             <div
               id="dropdown"
-              class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
-            >
+              class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
               <ul
                 class="py-2 text-sm text-gray-700 dark:text-gray-200"
-                aria-labelledby="dropdownDefaultButton"
-              >
+                aria-labelledby="dropdownDefaultButton">
                 <li>
                   <a
                     href="#"
                     onClick={handleMenuItemClick}
-                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                  >
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                     1mo
                   </a>
                 </li>
@@ -204,8 +196,7 @@ function App() {
                   <a
                     href="#"
                     onClick={handleMenuItemClick}
-                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                  >
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                     3mo
                   </a>
                 </li>
@@ -213,8 +204,7 @@ function App() {
                   <a
                     href="#"
                     onClick={handleMenuItemClick}
-                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                  >
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                     6mo
                   </a>
                 </li>
@@ -222,8 +212,7 @@ function App() {
                   <a
                     href="#"
                     onClick={handleMenuItemClick}
-                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                  >
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                     1y
                   </a>
                 </li>
@@ -231,8 +220,7 @@ function App() {
             </div>
             <button
               type="submit"
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
+              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
               <div class="flex">
                 Submit Query{" "}
                 <svg
@@ -240,8 +228,7 @@ function App() {
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
-                  viewBox="0 0 24 24"
-                >
+                  viewBox="0 0 24 24">
                   <path
                     stroke="currentColor"
                     stroke-linecap="round"
