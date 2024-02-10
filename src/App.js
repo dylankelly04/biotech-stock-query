@@ -56,7 +56,7 @@ function App() {
   async function fetchData(e) {
     e.preventDefault();
     var req = await axios.get(
-      `https://biotech-stock-query-backend.vercel.app/data?ticker=${inputValue.ticker}&time=${selectedItem}`
+      `https://biotech-stock-query-backend.onrender.com//data?ticker=${inputValue.ticker}&time=${selectedItem}`
     );
     var data = req.data;
     data = JSON.parse(data);
