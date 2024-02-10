@@ -56,7 +56,7 @@ function App() {
   async function fetchData(e) {
     e.preventDefault();
     var req = await axios.get(
-      `http://127.0.0.1:8000/data?ticker=${inputValue.ticker}&time=${selectedItem}`
+      `https://biotech-stock-query-backend.vercel.app/data?ticker=${inputValue.ticker}&time=${selectedItem}`
     );
     var data = req.data;
     data = JSON.parse(data);
@@ -134,7 +134,7 @@ function App() {
                   type="text"
                   id="password"
                   name="query"
-                  class="shadow-sm w-[425px] bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                  class="shadow-sm w-[425px]  border text-sm rounded-lg block p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm-light"
                   placeholder="Why did $HACK stock go up 30% this month?"
                   required
                   value={inputValue.query}
@@ -162,10 +162,10 @@ function App() {
             <button
               id="dropdownDefaultButton"
               data-dropdown-toggle="dropdown"
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              class="bg-gray-700 border-gray-600 placeholder-gray-400 text-white  focus:border-gray-900 hover:bg-slate-600 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               type="button"
             >
-              Period{" "}
+              Select Time Period{" "}
               <svg
                 class="w-2.5 h-2.5 ms-3"
                 aria-hidden="true"
