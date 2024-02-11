@@ -365,7 +365,7 @@ function App() {
         </div>
       </div>
       <div className="border rounded-md border-emerald-600 h-full flex flex-row px-12">
-        <div className="text-slate-200 my-2 w-1/2 text-base">
+        <div className="text-slate-200 my-1 w-1/2 text-base">
           Stock prediction based on our custom data-driven stock vetter. (Currently only supports local run due to cloud limitations in the free tier for running ML models. Please refer to demo video)
         </div>
         <div className="text-white my-2 grow">
