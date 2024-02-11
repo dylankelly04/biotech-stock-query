@@ -1,5 +1,5 @@
 import logo from "./logo.svg";
-import { LineChart } from "@tremor/react";
+import { LineChart, CategoryBar, DonutChart } from "@tremor/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "flowbite";
@@ -23,6 +23,13 @@ function App() {
   const [stockName, setStockName] = useState("$ORGO");
   const [chartData, setChartData] = useState([]);
   const [refData, setRefData] = useState([]);
+  const [prediction, setPrediction] = useState([
+    { name: "Buy", value: 0.1 },
+    { name: "Hold", value: 0.4 },
+    { name: "Sell", value: 0.3 },
+    { name: "Sell", value: 0.1 },
+    { name: "Sell", value: 0.1 },
+  ]);
 
   const [inputValue, setInputValue] = useState({
     ticker: "ORGO",
@@ -337,7 +344,9 @@ function App() {
         )}
       </div>
       <div className="border rounded-md border-sky-700">
-        <h3 className="text-slate-200 text-center">Compare Similar Stocks</h3>
+        <h3 className="text-slate-200 text-center mt-4">
+          Compare Similar Stocks
+        </h3>
         <div className="grid grid-flow-dense grid-cols-3 p-5 gap-3">
           {similarStocks.map((stock, idx) => {
             return (
@@ -355,14 +364,16 @@ function App() {
           })}
         </div>
       </div>
-      <div className="border rounded-md border-emerald-600">
-        <h3 className="text-slate-200 text-center">Stock Analysis</h3>
-        <div className="border rounded-md border-slate-800 bg-yellow-700">
-          AI Stock Rating:
+      <div className="border rounded-md border-emerald-600 h-full flex flex-row px-12">
+        <div className="text-slate-200 my-12 w-1/2 text-lg">
+          Stock prediction based on our custom data-driven stock vetter.
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          <div>1</div>
-          <div>2</div>
+        <div className="text-white my-6 grow">
+          <DonutChart
+            data={prediction}
+            variant="pie"
+            onValueChange={(v) => console.log(v)}
+          />
         </div>
       </div>
     </div>
