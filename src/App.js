@@ -24,11 +24,11 @@ function App() {
   const [chartData, setChartData] = useState([]);
   const [refData, setRefData] = useState([]);
   const [prediction, setPrediction] = useState([
-    { name: "Buy", value: 0.1 },
-    { name: "Hold", value: 0.4 },
-    { name: "Sell", value: 0.3 },
-    { name: "Sell", value: 0.1 },
-    { name: "Sell", value: 0.1 },
+    { name: "Very Strong Potential", value: 0.1 },
+    { name: "Strong Potential", value: 0.4 },
+    { name: "Neutral", value: 0.3 },
+    { name: "Low Potential", value: 0.1 },
+    { name: "Little/No Potential", value: 0.1 },
   ]);
 
   const [inputValue, setInputValue] = useState({
@@ -366,7 +366,7 @@ function App() {
       </div>
       <div className="border rounded-md border-emerald-600 h-full flex flex-row px-12">
         <div className="text-slate-200 my-12 w-1/2 text-lg">
-          Stock prediction based on our custom data-driven stock vetter.
+          Stock prediction based on our custom data-driven stock vetter. (Currently only supports local run due to cloud limitations in the free tier for running ML models. Please refer to demo video)
         </div>
         <div className="text-white my-6 grow">
           <DonutChart
