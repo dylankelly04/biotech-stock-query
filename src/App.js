@@ -22,6 +22,7 @@ function App() {
   const [shownStocks, setShownStocks] = useState([]);
   const [stockName, setStockName] = useState("$ORGO");
   const [chartData, setChartData] = useState([]);
+  const [refData, setRefData] = useState([]);
 
   const [inputValue, setInputValue] = useState({
     ticker: "ORGO",
@@ -49,13 +50,13 @@ function App() {
 
   async function fetchGPTResponse(e) {
     setIsLoading(true);
-    // console.log("fetch gpt " + JSON.stringify(inputValue));
-    // var req = await axios.get(
-    //   `https://biotech-stock-query-backend.onrender.com/api/${inputValue.ticker}?query=${inputValue.query}`
-    // );
-    // var data = req.data;
-    // console.log(data);
-    // setGptResponse(data.messages);
+    console.log("fetch gpt " + JSON.stringify(inputValue));
+    var req = await axios.get(
+      `https://biotech-stock-query-backend.onrender.com/api/${inputValue.ticker}?query=${inputValue.query}`
+    );
+    var data = req.data;
+    console.log(data);
+    setGptResponse(data.messages);
     setIsLoading(false);
   }
 
@@ -65,7 +66,8 @@ function App() {
       `https://biotech-stock-query-backend.onrender.com/api/similar/${inputValue.ticker}`
     );
     var data = req.data;
-    setSimilarStocks(data.similar);
+    setSimilarStocks(data.similar.map((stock) => "$" + stock).sort());
+    setShownStocks(new Array(data.similar.length).fill(false));
   }
 
   async function fetchData(e) {
@@ -73,39 +75,66 @@ function App() {
     setStockName("$" + inputValue.ticker);
     fetchGPTResponse(e);
   }
+  async function fetchDataAsync(ticker) {
+    if (!stockName) return;
+
+    try {
+      var response = await axios.get(
+        `https://biotech-stock-query-backend.onrender.com/data?ticker=${ticker.slice(
+          1
+        )}&time=${selectedItem}`
+      );
+
+      var data = response.data;
+      data = JSON.parse(data);
+      var close = data.Close;
+      var newChart = [];
+
+      for (const [key, value] of Object.entries(close)) {
+        var formattedDate = new Date(parseInt(key));
+        newChart.push({
+          date: formatDate(formattedDate),
+          [ticker]: value,
+        });
+      }
+      return newChart;
+    } catch (error) {
+      console.error("There was an error fetching the data: ", error);
+    }
+  }
 
   useEffect(() => {
-    const fetchDataAsync = async (ticker) => {
-      if (!stockName) return;
+    console.log(shownStocks);
+    fetchDataAsync(stockName).then((data) => {
+      setRefData(data);
+      setChartData(data);
+    });
+    fetchSimilarStocks();
+  }, [stockName, selectedItem]);
 
-      try {
-        var response = await axios.get(
-          `https://biotech-stock-query-backend.onrender.com/data?ticker=${ticker.slice(
-            1
-          )}&time=${selectedItem}`
-        );
-
-        var data = response.data;
-        data = JSON.parse(data);
-        var close = data.Close;
-        var newChart = [];
-
-        for (const [key, value] of Object.entries(close)) {
-          var formattedDate = new Date(parseInt(key));
-          newChart.push({
-            date: formatDate(formattedDate),
-            [ticker]: value,
+  useEffect(() => {
+    console.log("shown", shownStocks);
+    Promise.all(
+      shownStocks.map((bool, idx) => {
+        if (bool) {
+          return fetchDataAsync(similarStocks[idx]);
+        }
+        return null;
+      })
+    ).then((data) => {
+      console.log(data);
+      let merged = refData;
+      for (let i = 0; i < data.length; i++) {
+        if (data[i]) {
+          console.log("result", i, data[i]);
+          merged = merged.map((old, idx) => {
+            return { ...old, ...data[i][idx] };
           });
         }
-        setChartData(newChart);
-      } catch (error) {
-        console.error("There was an error fetching the data: ", error);
       }
-    };
-
-    fetchDataAsync(stockName);
-    fetchSimilarStocks();
-  }, [stockName, selectedItem]); // Effect runs only when stockName changes
+      setChartData(merged);
+    });
+  }, [shownStocks]);
 
   return (
     <div className="grid grid-cols-3 grid-rows-5 gap-5 h-full p-5">
@@ -118,8 +147,20 @@ function App() {
           data={chartData}
           index="date"
           yAxisWidth={30}
-          categories={[stockName]}
-          colors={["indigo", "cyan"]}
+          categories={[stockName].concat(
+            similarStocks.filter((stock, idx) => shownStocks[idx])
+          )}
+          colors={[
+            "indigo",
+            "cyan",
+            "red",
+            "green",
+            "yellow",
+            "purple",
+            "blue",
+            "pink",
+            "gray",
+          ]}
           showAnimation={true}
           autoMinValue={true}
         />
@@ -142,8 +183,7 @@ function App() {
             <div class="mr-4">
               <label
                 for="email"
-                class="block mb-2 text-sm font-medium text-white"
-              >
+                class="block mb-2 text-sm font-medium text-white">
                 Ticker
               </label>
               <input
@@ -160,8 +200,7 @@ function App() {
             <div class="w-1/2">
               <label
                 for="password"
-                class="block mb-2 text-sm font-medium text-white"
-              >
+                class="block mb-2 text-sm font-medium text-white">
                 Query
               </label>
               <input
@@ -184,16 +223,14 @@ function App() {
             id="dropdownDefaultButton"
             data-dropdown-toggle="dropdown"
             class="mr-5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white  focus:border-gray-900 hover:bg-slate-600 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            type="button"
-          >
+            type="button">
             {selectedItem}
             <svg
               class="w-2.5 h-2.5 ms-3"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
-              viewBox="0 0 10 6"
-            >
+              viewBox="0 0 10 6">
               <path
                 stroke="currentColor"
                 stroke-linecap="round"
@@ -206,18 +243,15 @@ function App() {
 
           <div
             id="dropdown"
-            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
-          >
+            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
             <ul
               class="py-2 text-sm text-gray-700 dark:text-gray-200"
-              aria-labelledby="dropdownDefaultButton"
-            >
+              aria-labelledby="dropdownDefaultButton">
               <li>
                 <a
                   href="#"
                   onClick={handleMenuItemClick}
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                >
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                   1mo
                 </a>
               </li>
@@ -225,8 +259,7 @@ function App() {
                 <a
                   href="#"
                   onClick={handleMenuItemClick}
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                >
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                   3mo
                 </a>
               </li>
@@ -234,8 +267,7 @@ function App() {
                 <a
                   href="#"
                   onClick={handleMenuItemClick}
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                >
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                   6mo
                 </a>
               </li>
@@ -243,8 +275,7 @@ function App() {
                 <a
                   href="#"
                   onClick={handleMenuItemClick}
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                >
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                   1y
                 </a>
               </li>
@@ -252,8 +283,7 @@ function App() {
           </div>
           <button
             type="submit"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             <div class="flex">
               Submit Query{" "}
               <svg
@@ -261,8 +291,7 @@ function App() {
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                viewBox="0 0 24 24"
-              >
+                viewBox="0 0 24 24">
                 <path
                   stroke="currentColor"
                   stroke-linecap="round"
@@ -296,7 +325,7 @@ function App() {
                     <TypeAnimation
                       sequence={message}
                       wrapper="span"
-                      speed={70}
+                      speed={80}
                       repeat={1}
                       cursor={false}
                     />
@@ -310,16 +339,17 @@ function App() {
       <div className="border rounded-md border-sky-700">
         <h3 className="text-slate-200 text-center">Compare Similar Stocks</h3>
         <div className="grid grid-flow-dense grid-cols-3 p-5 gap-3">
-          {similarStocks.map((stock) => {
+          {similarStocks.map((stock, idx) => {
             return (
               <button
+                key={idx}
                 onClick={(e) => {
-                  const ticker = e.target.textContent;
-                  setShownStocks([...shownStocks, ticker]);
+                  const newShownStocks = shownStocks;
+                  newShownStocks[idx] = !newShownStocks[idx];
+                  setShownStocks([...newShownStocks]);
                 }}
-                className="inline-block px-1 bg-zinc-400 rounded-lg text-center py-1 hover:bg-zinc-500 duration-200"
-              >
-                ${stock}
+                className="inline-block px-1 bg-zinc-400 rounded-lg text-center py-1 hover:bg-zinc-500 duration-200">
+                {stock}
               </button>
             );
           })}
